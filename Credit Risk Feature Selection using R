@@ -1,0 +1,34 @@
+Cree1<-read.csv("C:/Users/AKHIL/Desktop/New folder/CreditRisk.csv")
+View(Cree1)
+library(dplyr)
+Cree<-na.omit(Cree1)
+b<-table(Cree$Loan_Status1)
+
+##############dummy variable or one hot encoding############################################################
+Cree<-mutate(Cree,Gender1=ifelse(Gender=="Male",1,0))
+Cree<-mutate(Cree,Married1=ifelse(Married=="Yes",1,0))
+Cree<-mutate(Cree,Education1=ifelse(Education=="Graduate",1,0))
+Cree<-mutate(Cree,Self_Employed1=ifelse(Self_Employed=="Yes",1,0))
+Cree<-mutate(Cree,Loan_Status1=ifelse(Loan_Status=="Y",1,0))
+Cree<-mutate(Cree,newarea1=ifelse(Property_Area=="Urban",2,ifelse(Property_Area=="Rural",0,1)))
+Cree<-select(Cree,4,7,8,9,10,11,14,15,16,17,18,19)                    
+View(Cree)                    
+
+
+#####################factorising###########################################################################
+
+Cree$Gender1<-factor(Cree$Gender1)
+Cree$Married1<-factor(Cree$Married1)
+Cree$Education11<-factor(Cree$Education1)
+Cree$Self_Employed1<-factor(Cree$Self_Employed1)
+Cree$Loan_Status1<-factor(Cree$Loan_Status1)
+Cree$Gender1<-factor(Cree$newarea1)
+
+
+
+###########################################################################################################
+md2_bor<-Boruta(Loan_Status1~.,data=Cree)
+plot(md2_bor)
+plot(md2_bor,cex.axis=.7,las=2)
+plot(md2_bor)
+md2_bor$finalDecision
